@@ -1,0 +1,65 @@
+setCps(140/60/4)
+
+await samples('github:algorave-dave/samples')
+await samples('github:tidalcycles/dirt-samples')
+
+const gainn = [
+  "2",
+  "{.75 2.5}*4",
+  "{.75 2.5!9 .75 2.5!5 .75 2.5 .75 2.5!7 .75 2.5!3 <2.5 .75> 2.5}%16"
+]
+
+const goo = 1
+
+const structures = [
+"~",
+"x*4",
+"{x ~!9 x ~!5}",
+"{x ~!4 x*2 ~!2}"
+]
+
+$bassline: note("[eb, eb1]!4 [f1, f]!4 [g1, g]!4 [f1, f]!2 [bb1, bb]!2")
+.sound("gm_synth_bass_2")
+.cut(.5)
+// .slow(4)
+.seg(8)
+.postgain(2)
+.delay(.2)
+.delaytime(1/1.5)
+.delayfeedback(.5)
+// .jux(rev)
+// .pan(rand)
+// .room(1)
+// .roomsize(3)
+.lpf(slider(1219.7, 300, 2000))
+.postgain(pick(gainn, goo))
+._punchcard({height: 100, width: 1600})
+const arpeggiator = [
+  "{d4 bb3 eb3 d3 bb2 eb2}%16",
+  "{c4 bb3 f3 c3 bb2 f2}%16",
+  "{d4 bb3 g3 d3 bb2 g2}%16",
+  "{c4 bb3 f3 c3 bb2 f2}%16",
+]
+
+
+_$arp: note(pick(arpeggiator, "<0 1 2 3>".slow(2)))
+.sound('piano')
+.lpf(300)
+.attack(.01)
+.sustain(.5).release(.01)
+.room(.3)
+// .roomsize(3)
+.lpenv(slider(6, 1.25, 6))
+.postgain(pick(gainn, goo))
+._punchcard({width: 1600, height: 100})
+$drums: stack(
+  s("house: 8").postgain(6).pcurve(2).pdec(1).struct(pick(structures, goo)),
+  // s("{~ ~ rim ~ cp ~ rim cp ~!2 rim ~ cp ~ < rim ~ >!2}%8").bank("[KorgDDM110, dmx]").speed(1.2).fast(2).gain(.2),
+  // s("sh").struct("[x!3 ~!2 x!10 ~]").postgain(.2).lpf(7000).bank("RolandTR808").speed(.8).jux(rev),
+
+  // // // // ////
+
+  // s("hh").struct("x*16").postgain(.5).bank("RolandTR808").speed(1).jux(rev).room(sine.range(.1, .4)),
+  // s("~ hh").bank("RolandTR808").room(.3).speed(.75).gain(1.2).fast(4),
+)
+._punchcard({width: 1600, height: 200})
