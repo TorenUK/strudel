@@ -1,20 +1,19 @@
 setCps(140/60/4)
 await samples('github:algorave-dave/samples')
 
-const index = 2
-
 const _gain = [
   "2",
   "{.75 2.5}*4",
   "{.75 2.5!9 .75 2.5!5 .75 2.5 .75 2.5!7 .75 2.5!3 <2.5 .75> 2.5}%16"
 ]
-
 const structures = [
 "~",
 "x*4",
 "{x ~!9 x ~!5}",
 "{x ~!4 x*2 ~!2}"
 ]
+
+
 
 const drumStack = [
   s("test"),
@@ -25,30 +24,32 @@ const drumStack = [
 ]
 
 // C, Eb, G - C minor 
-const arpeggiator = [
-  "{eb4 c3 g3 c3 f4 c3}%8",
-  "{f3 c3 eb3 eb3 f4 g3}%8",
-  "{eb4 c3 g3 c3 f4 c3}%8",
+const arpeggios = [
+  "{eb4 c3 g3 c3 f4 c3}%16",
+  "{f3 c3 eb3 eb3 f4 g3}%16",
+  "{eb4 c3 g3 c3 f4 c3}%16",
 ]
 
+const index = 1
 
-$arp: note(pick(arpeggiator, "<0 1 2>".slow(2)))
-.sound("sine")
-.cut(.5)
+$melody: note(pick(arpeggios, "<0 1 2>".slow(2)))
+.sound("supersaw")
+.cut(.9)
 // .attack(.1)
 // .sustain(.5)
 // .release(.01)
+.delay(.2)
 .room(.6)
 .lpf(300)
-.lpenv(slider(3.97175, 1.25, 6))
+.gain(.9)
+.lpenv(slider(2.0195, 1.25, 6))
 .postgain(pick(_gain, index))
 ._punchcard({width: 1600, height: 100})
 
 $drums: stack(
-  s("house: 8").lpf(100).postgain(5).pcurve(2).pdec(1).struct(pick(structures, index)),
-  drumStack[1],
+  s("house: 8").postgain(2).struct(pick(structures, index)),
+  drumStack[1], 
   drumStack[2],
-  // // // // //
   drumStack[3],
   drumStack[4]
 )
