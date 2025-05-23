@@ -1,0 +1,55 @@
+setCps(140/60/4)
+await samples('github:algorave-dave/samples')
+
+const index = 2
+
+const _gain = [
+  "2",
+  "{.75 2.5}*4",
+  "{.75 2.5!9 .75 2.5!5 .75 2.5 .75 2.5!7 .75 2.5!3 <2.5 .75> 2.5}%16"
+]
+
+const structures = [
+"~",
+"x*4",
+"{x ~!9 x ~!5}",
+"{x ~!4 x*2 ~!2}"
+]
+
+const drumStack = [
+  s("test"),
+  s("{~ ~ rim ~ cp ~ rim cp ~!2 rim ~ cp ~ < rim ~ >!2}%8").bank("[KorgDDM110, dmx]").speed(1.2).fast(2).gain(.2).lpf(1500),
+  s("sh").struct("[x!3 ~!2 x!10 ~]").postgain(.2).lpf(7000).bank("RolandTR808").speed(.8).jux(rev),
+  s("hh").struct("x*16").postgain(.5).bank("RolandTR808").speed(1).jux(rev).room(sine.range(.1, .4)),
+  s("~ hh").bank("RolandTR808").room(.3).speed(.75).gain(1.2).fast(4),
+]
+
+// C, Eb, G - C minor 
+const arpeggiator = [
+  "{eb4 c3 g3 c3 f4 c3}%8",
+  "{f3 c3 eb3 eb3 f4 g3}%8",
+  "{eb4 c3 g3 c3 f4 c3}%8",
+]
+
+
+$arp: note(pick(arpeggiator, "<0 1 2>".slow(2)))
+.sound("sine")
+.cut(.5)
+// .attack(.1)
+// .sustain(.5)
+// .release(.01)
+.room(.6)
+.lpf(300)
+.lpenv(slider(3.97175, 1.25, 6))
+.postgain(pick(_gain, index))
+._punchcard({width: 1600, height: 100})
+
+$drums: stack(
+  s("house: 8").lpf(100).postgain(5).pcurve(2).pdec(1).struct(pick(structures, index)),
+  drumStack[1],
+  drumStack[2],
+  // // // // //
+  drumStack[3],
+  drumStack[4]
+)
+._punchcard({width: 1600, height: 200})
